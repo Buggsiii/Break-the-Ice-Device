@@ -217,7 +217,12 @@
     },
     "linux": {
       "target": [
-        "AppImage"
+        {
+          "target": "AppImage",
+          "arch": [
+            "armv7l"
+          ]
+        }
       ],
       "category": "Development"
     },
