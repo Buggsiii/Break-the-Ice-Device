@@ -12,6 +12,7 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import { SerialPort } from 'serialport';
 // import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -107,6 +108,17 @@ const createWindow = async () => {
   mainWindow.webContents.setWindowOpenHandler((edata) => {
     shell.openExternal(edata.url);
     return { action: 'deny' };
+  });
+
+  mainWindow.webContents.on('did-finish-load', () => {
+    console.log('did-finish-load');
+
+    const port = new SerialPort({ path: 'COM3', baudRate: 9600 });
+    port.on('data', (data) => {
+      console.log('Data:', data);
+      mainWindow?.webContents.send('data', data.toString());
+    });
+    mainWindow?.webContents.send('button', '2');
   });
 
   // Remove this if your app does not use auto updates
