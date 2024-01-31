@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
-import { Layout } from '../../Components';
+import Layout from '../../Shared/Layout';
 import GameLink from '../../Components/GameLink/GameLink';
-import InputEvent from '../../input';
+import Input from '../../input';
 import './Home.css';
 
 export default function Home() {
@@ -11,10 +11,11 @@ export default function Home() {
   const surveyRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
-    InputEvent.on('one', () => millionaireRef.current?.click());
-    InputEvent.on('two', () => jeopardyRef.current?.click());
-    InputEvent.on('three', () => familyRef.current?.click());
-    InputEvent.on('four', () => surveyRef.current?.click());
+    const input = new Input('one');
+    input.InputEvent.on('one', () => millionaireRef.current?.click());
+    input.InputEvent.on('two', () => jeopardyRef.current?.click());
+    input.InputEvent.on('three', () => familyRef.current?.click());
+    input.InputEvent.on('four', () => surveyRef.current?.click());
   }, []);
 
   return (

@@ -1,32 +1,59 @@
 import EventEmitter from 'events';
 
-const InputEvent = new EventEmitter();
+class Input {
+  constructor(name) {
+    this.InputEvent = new EventEmitter();
+    this.name = name;
+    this.initListeners();
+  }
 
-function emitInput(key) {
-  switch (key) {
-    case '1':
-      InputEvent.emit('one');
-      break;
-    case '2':
-      InputEvent.emit('two');
-      break;
-    case '3':
-      InputEvent.emit('three');
-      break;
-    case '4':
-      InputEvent.emit('four');
-      break;
-    case 'Escape':
-      InputEvent.emit('back');
-      break;
-    default:
-      break;
+  emitInput(key) {
+    switch (key) {
+      case '1':
+        this.InputEvent.emit('one');
+        break;
+      case '2':
+        this.InputEvent.emit('two');
+        break;
+      case '3':
+        this.InputEvent.emit('three');
+        break;
+      case '4':
+        this.InputEvent.emit('four');
+        break;
+      case 'Escape':
+        this.InputEvent.emit('back');
+        break;
+      default:
+        break;
+    }
+  }
+
+  initListeners() {
+    window.electron.ipcRenderer.on(this.name, (key) => {
+      // eslint-disable-next-line no-console
+      console.log(key);
+
+      switch (key) {
+        case 'connected':
+          this.InputEvent.emit('connected');
+          break;
+        case 'disconnected':
+          this.InputEvent.emit('disconnected');
+          break;
+        default:
+          this.emitInput(key);
+          break;
+      }
+    });
+
+    window.electron.ipcRenderer.sendMessage('one', 'ready');
+
+    // Check for keyboard input
+    document.addEventListener('keydown', (event) => {
+      this.emitInput(event.key);
+    });
   }
 }
 
-// Check for keyboard input
-document.addEventListener('keydown', (event) => {
-  emitInput(event.key);
-});
-
-export default InputEvent;
+export default Input;

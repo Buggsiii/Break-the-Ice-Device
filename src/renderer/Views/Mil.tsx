@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Layout } from '../Components';
+import Layout from '../Shared/Layout';
 
 export default function Mil() {
   return (
