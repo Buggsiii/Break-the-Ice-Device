@@ -111,24 +111,41 @@ const createWindow = async () => {
     return { action: 'deny' };
   });
 
-  mainWindow.webContents.on('did-finish-load', () => {
+  mainWindow.webContents.on('did-finish-load', async () => {
     console.log('did-finish-load');
 
-    const port1 = new SerialPort({
-      path: 'COM3',
-      autoOpen: false,
-      baudRate: 115200,
-      dataBits: 8,
-      stopBits: 1,
-    });
+    let portList: string[] = [];
+
+    await SerialPort.list()
+      .then((ports) => {
+        portList = ports
+          .filter((port) => port.manufacturer === 'Silicon Labs')
+          .map((port) => port.path);
+      })
+      .catch(console.log);
+    console.log(portList);
+
+    const ports: SerialPort[] = [];
+
+    for (let i = 0; i < portList.length; i += 1) {
+      ports.push(
+        new SerialPort({
+          path: portList[i],
+          autoOpen: false,
+          baudRate: 115200,
+          dataBits: 8,
+          stopBits: 1,
+        }),
+      );
+    }
 
     ipcMain.on('one', (event, arg) => {
       if (arg !== 'ready') return;
-      if (!port1.isOpen) return;
+      if (!ports[0].isOpen) return;
       event.reply('one', 'connected');
     });
 
-    port1.open((err) => {
+    ports[0].open((err) => {
       if (err) {
         console.log('Error opening port: ', err.message);
         return;
@@ -138,10 +155,10 @@ const createWindow = async () => {
       mainWindow?.webContents.send('one', 'connected');
     });
 
-    port1.on('close', () => {
+    ports[0].on('close', () => {
       console.log('Port closed. Attempting to reopen...');
       mainWindow?.webContents.send('one', 'disconnected');
-      port1.open((err) => {
+      ports[0].open((err) => {
         if (err) {
           console.log('Error opening port: ', err.message);
           return;
@@ -152,8 +169,8 @@ const createWindow = async () => {
     });
 
     usb.on('attach', () => {
-      if (port1.isOpen) {
-        port1.close((err) => {
+      if (ports[0].isOpen) {
+        ports[0].close((err) => {
           if (err) {
             console.log('Error closing port: ', err.message);
             return;
@@ -162,7 +179,7 @@ const createWindow = async () => {
           console.log('Port closed');
         });
       }
-      port1.open((err) => {
+      ports[0].open((err) => {
         if (err) {
           console.log('Error opening port: ', err.message);
           return;
@@ -173,7 +190,7 @@ const createWindow = async () => {
       });
     });
 
-    const parser1 = port1.pipe(new ReadlineParser({ delimiter: '\r\n' }));
+    const parser1 = ports[0].pipe(new ReadlineParser({ delimiter: '\r\n' }));
 
     parser1.on('data', (data) => {
       console.log(data.toString());
