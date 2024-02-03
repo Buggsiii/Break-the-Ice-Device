@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { IoIosArrowBack as BackIcon } from 'react-icons/io';
-import ControllerStatus from '../Components/ControllerStatus';
-import Input from '../input';
-import { OneContext } from './Contexts';
+import ControllerStatus from './ControllerStatus';
+import InputEvent from '../input';
 
 export default function Layout({
   children,
@@ -16,11 +15,10 @@ export default function Layout({
   // controller?: boolean;
 }) {
   const backRef = React.useRef<HTMLAnchorElement>(null);
-  const oneConnected = React.useContext(OneContext);
 
   useEffect(() => {
-    const one = new Input('one');
-    one.InputEvent.on('back', () => backRef.current?.click());
+    if (!back) return;
+    InputEvent.on('back', () => backRef.current?.click());
   }, [back]);
 
   return (
@@ -37,7 +35,7 @@ export default function Layout({
       <main>{children}</main>
       {/* {controller && ( */}
       <footer>
-        <ControllerStatus index={1} connected={oneConnected} />
+        <ControllerStatus index={1} />
         <ControllerStatus index={2} />
       </footer>
       {/* )} */}

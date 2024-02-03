@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Layout from '../Shared/Layout';
+import { Layout } from '../Components';
 
 export default function Err404() {
   return (

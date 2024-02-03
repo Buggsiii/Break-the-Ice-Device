@@ -12,8 +12,7 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import { ReadlineParser, SerialPort } from 'serialport';
-import { usb } from 'usb';
+import { SerialPort } from 'serialport';
 // import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -114,71 +113,12 @@ const createWindow = async () => {
   mainWindow.webContents.on('did-finish-load', () => {
     console.log('did-finish-load');
 
-    const port1 = new SerialPort({
-      path: 'COM3',
-      autoOpen: false,
-      baudRate: 115200,
-      dataBits: 8,
-      stopBits: 1,
+    const port = new SerialPort({ path: 'COM3', baudRate: 9600 });
+    port.on('data', (data) => {
+      console.log('Data:', data);
+      mainWindow?.webContents.send('data', data.toString());
     });
-
-    ipcMain.on('one', (event, arg) => {
-      if (arg !== 'ready') return;
-      if (!port1.isOpen) return;
-      event.reply('one', 'connected');
-    });
-
-    port1.open((err) => {
-      if (err) {
-        console.log('Error opening port: ', err.message);
-        return;
-      }
-
-      console.log('Port opened');
-      mainWindow?.webContents.send('one', 'connected');
-    });
-
-    port1.on('close', () => {
-      console.log('Port closed. Attempting to reopen...');
-      mainWindow?.webContents.send('one', 'disconnected');
-      port1.open((err) => {
-        if (err) {
-          console.log('Error opening port: ', err.message);
-          return;
-        }
-
-        console.log('Port reopened');
-      });
-    });
-
-    usb.on('attach', () => {
-      if (port1.isOpen) {
-        port1.close((err) => {
-          if (err) {
-            console.log('Error closing port: ', err.message);
-            return;
-          }
-
-          console.log('Port closed');
-        });
-      }
-      port1.open((err) => {
-        if (err) {
-          console.log('Error opening port: ', err.message);
-          return;
-        }
-
-        console.log('Port reopened');
-        mainWindow?.webContents.send('one', 'connected');
-      });
-    });
-
-    const parser1 = port1.pipe(new ReadlineParser({ delimiter: '\r\n' }));
-
-    parser1.on('data', (data) => {
-      console.log(data.toString());
-      mainWindow?.webContents.send('one', data.toString());
-    });
+    mainWindow?.webContents.send('button', '2');
   });
 
   // Remove this if your app does not use auto updates
