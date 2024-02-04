@@ -2,21 +2,88 @@
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
-body {
-  position: relative;
-  color: white;
-  height: 100vh;
-  background: linear-gradient(
+
+:root {
+  --gradient: linear-gradient(
     200.96deg,
     #fedc2a -29.09%,
     #dd5789 51.77%,
     #7a2c9e 129.35%
   );
-  font-family: sans-serif;
-  overflow-y: hidden;
+  --background: #1e1e1e;
+  --text: #fff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+body,
+#root {
+  color: white;
+  height: 100vh;
+  width: 100vw;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Open Sans',
+    'Helvetica Neue',
+    sans-serif;
+  display: flex;
+  flex-direction: column;
+  background: var(--background);
+  overflow: clip;
+}
+
+header {
+  height: 60px;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 0 20px;
+  background: var(--gradient);
+}
+
+header > a {
+  position: absolute;
+  left: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}
+
+footer {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+h1 {
+  font-size: 1.5rem;
 }
 
 button {
@@ -26,7 +93,8 @@ button {
   border: none;
   appearance: none;
   font-size: 1.3rem;
-  box-shadow: 0px 8px 28px -6px rgba(24, 39, 75, 0.12),
+  box-shadow:
+    0px 8px 28px -6px rgba(24, 39, 75, 0.12),
     0px 18px 88px -4px rgba(24, 39, 75, 0.14);
   transition: all ease-in 0.1s;
   cursor: pointer;
@@ -38,25 +106,27 @@ button:hover {
   opacity: 1;
 }
 
-li {
-  list-style: none;
-}
-
 a {
   text-decoration: none;
   height: fit-content;
   width: fit-content;
   margin: 10px;
+  color: var(--text);
 }
 
 a:hover {
   opacity: 1;
-  text-decoration: none;
+  text-decoration: underline;
 }
 
-.Hello {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
+.indicator {
+  height: 0.5em;
+  width: 0.5em;
+  border-radius: 50%;
+  background: rgb(220, 0, 0);
+  /* border: 1px solid #fff; */
+}
+
+.indicator.active {
+  background: rgb(0, 220, 0);
 }

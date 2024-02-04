@@ -7,4 +7,9 @@ declare global {
   }
 }
 
+declare module '*.gltf' {
+  const value: any;
+  export default value;
+}
+
 export {};

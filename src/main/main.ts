@@ -12,6 +12,8 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import { usb } from 'usb';
+import { SerialPort, ReadlineParser } from 'serialport';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -36,8 +38,8 @@ if (process.env.NODE_ENV === 'production') {
   sourceMapSupport.install();
 }
 
-const isDebug =
-  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+const isDebug = false;
+// process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
 if (isDebug) {
   require('electron-debug')();
@@ -73,6 +75,8 @@ const createWindow = async () => {
     show: false,
     width: 1024,
     height: 728,
+    autoHideMenuBar: true,
+    fullscreen: false,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged
@@ -105,6 +109,94 @@ const createWindow = async () => {
   mainWindow.webContents.setWindowOpenHandler((edata) => {
     shell.openExternal(edata.url);
     return { action: 'deny' };
+  });
+
+  mainWindow.webContents.on('did-finish-load', async () => {
+    console.log('did-finish-load');
+
+    let portList: string[] = [];
+
+    await SerialPort.list()
+      .then((ports) => {
+        portList = ports
+          .filter((port) => port.manufacturer === 'Silicon Labs')
+          .map((port) => port.path);
+      })
+      .catch(console.log);
+    console.log(portList);
+
+    const ports: SerialPort[] = [];
+
+    for (let i = 0; i < portList.length; i += 1) {
+      ports.push(
+        new SerialPort({
+          path: portList[i],
+          autoOpen: false,
+          baudRate: 115200,
+          dataBits: 8,
+          stopBits: 1,
+        }),
+      );
+    }
+
+    ipcMain.on('one', (event, arg) => {
+      if (!ports[0]) return;
+      if (arg !== 'ready') return;
+      if (!ports[0].isOpen) return;
+      event.reply('one', 'connected');
+    });
+
+    ports[0].open((err) => {
+      if (err) {
+        console.log('Error opening port: ', err.message);
+        return;
+      }
+
+      console.log('Port opened');
+      mainWindow?.webContents.send('one', 'connected');
+    });
+
+    ports[0].on('close', () => {
+      console.log('Port closed. Attempting to reopen...');
+      mainWindow?.webContents.send('one', 'disconnected');
+      ports[0].open((err) => {
+        if (err) {
+          console.log('Error opening port: ', err.message);
+          return;
+        }
+
+        console.log('Port reopened');
+      });
+    });
+
+    usb.on('attach', () => {
+      if (ports[0].isOpen) {
+        ports[0].close((err) => {
+          if (err) {
+            console.log('Error closing port: ', err.message);
+            return;
+          }
+
+          console.log('Port closed');
+        });
+      }
+      ports[0].open((err) => {
+        if (err) {
+          console.log('Error opening port: ', err.message);
+          return;
+        }
+
+        console.log('Port reopened');
+        mainWindow?.webContents.send('one', 'connected');
+      });
+    });
+
+    const parser1 = ports[0].pipe(new ReadlineParser({ delimiter: '\r\n' }));
+
+    parser1.on('data', (data) => {
+      console.log(data.toString());
+      mainWindow?.webContents.send('one', data.toString());
+    });
   });
 
   // Remove this if your app does not use auto updates

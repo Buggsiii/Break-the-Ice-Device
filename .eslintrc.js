@@ -13,6 +13,10 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'error',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
+    'react/no-unknown-property': [
+      'error',
+      { ignore: ['args', 'object', 'geometry', 'material'] },
+    ],
   },
   parserOptions: {
     ecmaVersion: 2022,
