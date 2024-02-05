@@ -16,6 +16,10 @@ export default function Home() {
     input.InputEvent.on('two', () => jeopardyRef.current?.click());
     input.InputEvent.on('three', () => familyRef.current?.click());
     input.InputEvent.on('four', () => surveyRef.current?.click());
+
+    return () => {
+      input.InputEvent.removeAllListeners();
+    };
   }, []);
 
   return (

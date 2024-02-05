@@ -50,9 +50,13 @@ class Input {
     window.electron.ipcRenderer.sendMessage('one', 'ready');
 
     // Check for keyboard input
+    let lastKey;
     document.addEventListener('keydown', (event) => {
+      if (event.key == lastKey) return;
+      lastKey = event.key;
       this.emitInput(event.key);
     });
+    document.addEventListener('keyup', () => (lastKey = null));
   }
 }
 

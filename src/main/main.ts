@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === 'production') {
   sourceMapSupport.install();
 }
 
-const isDebug = false;
+const isDebug = true;
 // process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
 if (isDebug) {
@@ -146,30 +146,33 @@ const createWindow = async () => {
       event.reply('one', 'connected');
     });
 
-    ports[0].open((err) => {
-      if (err) {
-        console.log('Error opening port: ', err.message);
-        return;
-      }
-
-      console.log('Port opened');
-      mainWindow?.webContents.send('one', 'connected');
-    });
-
-    ports[0].on('close', () => {
-      console.log('Port closed. Attempting to reopen...');
-      mainWindow?.webContents.send('one', 'disconnected');
+    if (ports[0]) {
       ports[0].open((err) => {
         if (err) {
           console.log('Error opening port: ', err.message);
           return;
         }
 
-        console.log('Port reopened');
+        console.log('Port opened');
+        mainWindow?.webContents.send('one', 'connected');
       });
-    });
+
+      ports[0].on('close', () => {
+        console.log('Port closed. Attempting to reopen...');
+        mainWindow?.webContents.send('one', 'disconnected');
+        ports[0].open((err) => {
+          if (err) {
+            console.log('Error opening port: ', err.message);
+            return;
+          }
+
+          console.log('Port reopened');
+        });
+      });
+    }
 
     usb.on('attach', () => {
+      if (!ports[0]) return;
       if (ports[0].isOpen) {
         ports[0].close((err) => {
           if (err) {

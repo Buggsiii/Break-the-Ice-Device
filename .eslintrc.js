@@ -13,9 +13,19 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'error',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
+    'eslint/no-console',
     'react/no-unknown-property': [
       'error',
-      { ignore: ['args', 'object', 'geometry', 'material'] },
+      {
+        ignore: [
+          'args',
+          'object',
+          'geometry',
+          'material',
+          'position',
+          'intensity',
+        ],
+      },
     ],
   },
   parserOptions: {

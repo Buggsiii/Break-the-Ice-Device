@@ -1,0 +1,30 @@
+{
+  "Har Torben vinger?": {
+    "ans1": "Ja, han drikker redbull",
+    "ans2": "Nej, han er dum",
+    "ans3": "Nej, han har bare en tissemand",
+    "ans4": "Hmm, det kan godt være",
+    "correct": 3
+  },
+  "Lugter Gametecherne?": {
+    "ans1": "Ja, de går ikke i bad",
+    "ans2": "Ja, fordi de dyrker meget sport",
+    "ans3": "Ja, pga. dårlige gener",
+    "ans4": "Nej, det gør de ikke:(",
+    "correct": 1
+  },
+  "Får får får?": {
+    "ans1": "Ja, får får får",
+    "ans2": "Nej, får får ikke får, får får lam",
+    "ans3": "Det tror jeg",
+    "ans4": "Hmm, det kan godt være",
+    "correct": 2
+  },
+  "sss": {
+    "ans1": "Ja, får får får",
+    "ans2": "Nej, får får ikke får, får får lam",
+    "ans3": "Det tror jeg",
+    "ans4": "Hmm, det kan godt være",
+    "correct": 2
+  }
+}

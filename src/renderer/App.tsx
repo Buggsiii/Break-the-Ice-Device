@@ -11,9 +11,13 @@ export default function App() {
   const [oneConnected, setOneConnected] = useState(false);
 
   useEffect(() => {
-    const one = new Input('one');
-    one.InputEvent.on('connected', () => setOneConnected(true));
-    one.InputEvent.on('disconnected', () => setOneConnected(false));
+    const inputOne = new Input('one');
+    inputOne.InputEvent.on('connected', () => setOneConnected(true));
+    inputOne.InputEvent.on('disconnected', () => setOneConnected(false));
+
+    return () => {
+      inputOne.InputEvent.removeAllListeners();
+    };
   }, []);
 
   return (

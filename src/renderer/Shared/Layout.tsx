@@ -8,20 +8,23 @@ import { OneContext } from './Contexts';
 export default function Layout({
   children,
   title,
-  back = false, // controller = false,
+  back = false,
 }: {
   children: React.ReactNode;
   title: string;
   back?: boolean;
-  // controller?: boolean;
 }) {
   const backRef = React.useRef<HTMLAnchorElement>(null);
   const oneConnected = React.useContext(OneContext);
 
   useEffect(() => {
-    const one = new Input('one');
-    one.InputEvent.on('back', () => backRef.current?.click());
-  }, [back]);
+    const inputOne = new Input('one');
+    inputOne.InputEvent.on('back', () => backRef.current?.click());
+
+    return () => {
+      inputOne.InputEvent.removeAllListeners();
+    };
+  }, []);
 
   return (
     <>
@@ -35,17 +38,14 @@ export default function Layout({
         <h1>{title}</h1>
       </header>
       <main>{children}</main>
-      {/* {controller && ( */}
       <footer>
         <ControllerStatus index={1} connected={oneConnected} />
         <ControllerStatus index={2} />
       </footer>
-      {/* )} */}
     </>
   );
 }
 
 Layout.defaultProps = {
   back: false,
-  // controller: false,
 };
