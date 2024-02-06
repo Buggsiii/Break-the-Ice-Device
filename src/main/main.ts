@@ -139,37 +139,35 @@ const createWindow = async () => {
       );
     }
 
+    if (!ports[0]) return;
     ipcMain.on('one', (event, arg) => {
-      if (!ports[0]) return;
       if (arg !== 'ready') return;
       if (!ports[0].isOpen) return;
       event.reply('one', 'connected');
     });
 
-    if (ports[0]) {
+    ports[0].open((err) => {
+      if (err) {
+        console.log('Error opening port: ', err.message);
+        return;
+      }
+
+      console.log('Port opened');
+      mainWindow?.webContents.send('one', 'connected');
+    });
+
+    ports[0].on('close', () => {
+      console.log('Port closed. Attempting to reopen...');
+      mainWindow?.webContents.send('one', 'disconnected');
       ports[0].open((err) => {
         if (err) {
           console.log('Error opening port: ', err.message);
           return;
         }
 
-        console.log('Port opened');
-        mainWindow?.webContents.send('one', 'connected');
+        console.log('Port reopened');
       });
-
-      ports[0].on('close', () => {
-        console.log('Port closed. Attempting to reopen...');
-        mainWindow?.webContents.send('one', 'disconnected');
-        ports[0].open((err) => {
-          if (err) {
-            console.log('Error opening port: ', err.message);
-            return;
-          }
-
-          console.log('Port reopened');
-        });
-      });
-    }
+    });
 
     usb.on('attach', () => {
       if (!ports[0]) return;

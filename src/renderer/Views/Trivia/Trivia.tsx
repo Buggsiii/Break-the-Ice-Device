@@ -7,7 +7,8 @@ import Layout from '../../Shared/Layout';
 import Input from '../../input';
 import './Trivia.css';
 import Questions from './../../../../data/questions.json';
-import { Stats } from '@react-three/drei';
+import { Center, Text3D } from '@react-three/drei';
+import { IoMdHeart } from 'react-icons/io';
 
 CameraControls.install({ THREE });
 
@@ -16,7 +17,11 @@ function Hall() {
   const texture = new THREE.TextureLoader().load('textures/hall.png');
   texture.minFilter = THREE.NearestFilter;
   texture.magFilter = THREE.NearestFilter;
-  const material = new THREE.MeshStandardMaterial({ map: texture });
+  // Render both sides of the texture
+  const material = new THREE.MeshStandardMaterial({
+    map: texture,
+    side: THREE.DoubleSide,
+  });
   hall.traverse((child: any) => {
     if (!child.isMesh) return;
     child.material = material;
@@ -72,32 +77,74 @@ function Lights({ length }: { length: number }) {
   );
 }
 
-const answeredKeys: Array<string> = [];
+function Title() {
+  return (
+    <>
+      <Center position={[0, 0.2, 3]}>
+        <Text3D font={'./fonts/Roboto Black_Regular.json'} bevelEnabled>
+          TRIVIA
+        </Text3D>
+      </Center>
+      <Center position={[0, -0.7, 3]}>
+        <Text3D
+          font={'./fonts/Roboto_Regular.json'}
+          size={0.5}
+          bevelEnabled
+          bevelThickness={0.1}
+        >
+          PRESS 1
+        </Text3D>
+      </Center>
+      <BlinkingLight zPos={6} />
+    </>
+  );
+}
+
+function Win() {
+  return (
+    <>
+      <Center position={[0, 0.2, -105]}>
+        <Text3D font={'./fonts/Roboto Black_Regular.json'} bevelEnabled>
+          YOU WON!
+        </Text3D>
+      </Center>
+      <Center position={[0, -0.7, -105]}>
+        <Text3D
+          font={'./fonts/Roboto_Regular.json'}
+          size={0.5}
+          bevelEnabled
+          bevelThickness={0.1}
+        >
+          PRESS 1
+        </Text3D>
+      </Center>
+      <BlinkingLight zPos={6} />
+    </>
+  );
+}
+
+const keys = Object.keys(Questions);
 let currentKey: string;
 function getRandomKey() {
-  const keys = Object.keys(Questions);
-  let key: string = '';
+  const index = Math.floor(Math.random() * keys.length);
+  const key = keys[index];
 
-  while (key == '' || answeredKeys.includes(key)) {
-    const index = Math.floor(Math.random() * keys.length);
-    key = keys[index];
-  }
+  keys.splice(index, 1);
 
-  console.log(key, answeredKeys, answeredKeys.includes(key));
-  answeredKeys.push(key);
+  if (keys.length === 0) keys.push(...Object.keys(Questions));
   currentKey = key;
   return { key: key, value: (Questions as any)[key] };
 }
 
-function isAnswerCorrect(index: number) {
-  console.log((Questions as any)[currentKey]['correct']);
-  return (Questions as any)[currentKey]['correct'] == index;
+function isAnswerCorrect(correct: number, index: number) {
+  return correct == index;
 }
 
 export default function Trivia() {
-  const [zPos, setZPos] = useState(0);
-  const [question, setQuestion] = useState(getRandomKey());
-  console.log(question);
+  const [lives, setLives] = useState(3);
+  const [zPos, setZPos] = useState(10);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [question, setQuestion] = useState(() => getRandomKey());
 
   const btn1Ref = useRef<HTMLButtonElement>(null);
   const btn2Ref = useRef<HTMLButtonElement>(null);
@@ -105,17 +152,26 @@ export default function Trivia() {
   const btn4Ref = useRef<HTMLButtonElement>(null);
 
   function answer(index: number) {
-    const isCorrect = isAnswerCorrect(index);
-    console.log(isCorrect);
+    const isCorrect = isAnswerCorrect(question.value.correct, index);
 
-    if (isCorrect) setZPos((last: number) => (last -= 10));
+    if (!isCorrect) setLives((last: number) => last - 1);
+    setZPos((last: number) => last - 10);
     setQuestion(getRandomKey());
   }
 
+  const inputOne = new Input('one');
   useEffect(() => {
-    // const timer = setTimeout(() => setZPos(-10), 4000);
+    inputOne.InputEvent.on('one', () => setGameStarted(true));
+    return () => {
+      inputOne.InputEvent.removeAllListeners();
+    };
+  }, []);
 
-    const inputOne = new Input('one');
+  useEffect(() => {
+    if (!gameStarted) return;
+
+    setZPos(0);
+
     inputOne.InputEvent.on('one', () => btn1Ref.current?.click());
     inputOne.InputEvent.on('two', () => btn2Ref.current?.click());
     inputOne.InputEvent.on('three', () => btn3Ref.current?.click());
@@ -123,35 +179,44 @@ export default function Trivia() {
 
     return () => {
       inputOne.InputEvent.removeAllListeners();
-      // clearTimeout(timer);
     };
-  }, []);
+  }, [gameStarted]);
 
   return (
-    <Layout title="Crazy Trivia" back>
-      <Canvas camera={{ position: new THREE.Vector3(0, 0, 0) }}>
+    <Layout title="Trivia" back>
+      <Canvas camera={{ position: new THREE.Vector3(0, 0, 12), near: 0.01 }}>
         <fog attach="fog" args={['#000', 5, 10]} />
         <ambientLight intensity={0.1} />
         <Lights length={100} />
         <Hall />
         <Controls pos={new THREE.Vector3(0, 0, zPos)} />
-        <Stats />
+        <Title />
+        <Win />
       </Canvas>
-      <h2 className="question">{question.key}</h2>
-      <div className="btn-wrapper">
-        <button ref={btn1Ref} onClick={() => answer(1)}>
-          <span>1.</span> {question.value['ans1']}
-        </button>
-        <button ref={btn2Ref} onClick={() => answer(2)}>
-          <span>2.</span> {question.value['ans2']}
-        </button>
-        <button ref={btn3Ref} onClick={() => answer(3)}>
-          <span>3.</span> {question.value['ans3']}
-        </button>
-        <button ref={btn4Ref} onClick={() => answer(4)}>
-          <span>4.</span> {question.value['ans4']}
-        </button>
-      </div>
+      {gameStarted && (
+        <>
+          <div className="correct-answers">
+            {[...Array(lives > 0 ? lives : 0)].map((_, i) => (
+              <IoMdHeart key={i} />
+            ))}
+          </div>
+          <div className="btn-wrapper">
+            <h2 className="question">{question.key}</h2>
+            <button ref={btn1Ref} onClick={() => answer(1)}>
+              <span>1.</span> {question.value['ans1']}
+            </button>
+            <button ref={btn2Ref} onClick={() => answer(2)}>
+              <span>2.</span> {question.value['ans2']}
+            </button>
+            <button ref={btn3Ref} onClick={() => answer(3)}>
+              <span>3.</span> {question.value['ans3']}
+            </button>
+            <button ref={btn4Ref} onClick={() => answer(4)}>
+              <span>4.</span> {question.value['ans4']}
+            </button>
+          </div>
+        </>
+      )}
     </Layout>
   );
 }

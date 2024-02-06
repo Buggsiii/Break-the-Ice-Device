@@ -24,6 +24,7 @@ module.exports = {
           'material',
           'position',
           'intensity',
+          'fontSize'
         ],
       },
     ],
