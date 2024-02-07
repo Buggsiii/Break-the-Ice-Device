@@ -24,8 +24,8 @@ export default function Home() {
 
   return (
     <Layout title="Break the Ice Device">
-      <h2>Press Button to Play</h2>
-      <div className="gamelink-con">
+      <h2>Press a Button to Play</h2>
+      <div className="gamelink-wrapper">
         <GameLink ref={triviaRef} to="/trivia" text="Trivia" />
         <GameLink ref={jeopardyRef} to="/jeopardy" text="Jeopardy" />
         <GameLink ref={familyRef} to="/family" text="Family Feud" />

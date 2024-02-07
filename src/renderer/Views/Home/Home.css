@@ -1,6 +1,25 @@
-ol {
+.gamelink-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  font-weight: bold;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  background: var(--background);
+}
+
+.gamelink-wrapper > :nth-child(1 of .gamelink) {
+  border-color: red;
+}
+
+.gamelink-wrapper > :nth-child(2 of .gamelink) {
+  border-color: yellow;
+}
+
+.gamelink-wrapper > :nth-child(3 of .gamelink) {
+  border-color: blue;
+}
+
+.gamelink-wrapper > :nth-child(4 of .gamelink) {
+  border-color: white;
 }

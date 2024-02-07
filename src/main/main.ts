@@ -38,8 +38,8 @@ if (process.env.NODE_ENV === 'production') {
   sourceMapSupport.install();
 }
 
-const isDebug = true;
-// process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+const isDebug =
+  process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
 if (isDebug) {
   require('electron-debug')();
@@ -139,6 +139,29 @@ const createWindow = async () => {
       );
     }
 
+    usb.on('attach', () => {
+      if (!ports[0]) return;
+      if (ports[0].isOpen) {
+        ports[0].close((err) => {
+          if (err) {
+            console.log('Error closing port: ', err.message);
+            return;
+          }
+
+          console.log('Port closed');
+        });
+      }
+      ports[0].open((err) => {
+        if (err) {
+          console.log('Error opening port: ', err.message);
+          return;
+        }
+
+        console.log('Port reopened');
+        mainWindow?.webContents.send('one', 'connected');
+      });
+    });
+
     if (!ports[0]) return;
     ipcMain.on('one', (event, arg) => {
       if (arg !== 'ready') return;
@@ -166,29 +189,6 @@ const createWindow = async () => {
         }
 
         console.log('Port reopened');
-      });
-    });
-
-    usb.on('attach', () => {
-      if (!ports[0]) return;
-      if (ports[0].isOpen) {
-        ports[0].close((err) => {
-          if (err) {
-            console.log('Error closing port: ', err.message);
-            return;
-          }
-
-          console.log('Port closed');
-        });
-      }
-      ports[0].open((err) => {
-        if (err) {
-          console.log('Error opening port: ', err.message);
-          return;
-        }
-
-        console.log('Port reopened');
-        mainWindow?.webContents.send('one', 'connected');
       });
     });
 

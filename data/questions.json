@@ -1,30 +1,149 @@
 {
-  "Har Torben vinger?": {
-    "ans1": "Ja, han drikker redbull",
-    "ans2": "Nej, han er dum",
-    "ans3": "Nej, han har bare en tissemand",
-    "ans4": "Hmm, det kan godt være",
-    "correct": 3
-  },
-  "Lugter Gametecherne?": {
-    "ans1": "Ja, de går ikke i bad",
-    "ans2": "Ja, fordi de dyrker meget sport",
-    "ans3": "Ja, pga. dårlige gener",
-    "ans4": "Nej, det gør de ikke:(",
-    "correct": 1
-  },
   "Får får får?": {
     "ans1": "Ja, får får får",
     "ans2": "Nej, får får ikke får, får får lam",
-    "ans3": "Det tror jeg",
-    "ans4": "Hmm, det kan godt være",
+    "ans4": "Ja, får får får og får får lam",
+    "ans3": "Nej, får får ikke får og får får ikke lam",
     "correct": 2
   },
-  "sss": {
-    "ans1": "Ja, får får får",
-    "ans2": "Nej, får får ikke får, får får lam",
-    "ans3": "Det tror jeg",
-    "ans4": "Hmm, det kan godt være",
+  "Hvor mange bogstaver er der i det engelske alfabet?": {
+    "ans1": "26",
+    "ans2": "29",
+    "ans3": "24",
+    "ans4": "28",
+    "correct": 1
+  },
+  "Hvilke af disse er ikke et bær?": {
+    "ans1": "Banan",
+    "ans2": "Blåbær",
+    "ans3": "Avocado",
+    "ans4": "Jordbær",
+    "correct": 4
+  },
+  "Hvor mange stater er der i USA?": {
+    "ans1": "53",
+    "ans2": "51",
+    "ans3": "52",
+    "ans4": "50",
+    "correct": 4
+  },
+  "Hvilket land har en enhjørning som national dyr?": {
+    "ans1": "Ireland",
+    "ans2": "Scotland",
+    "ans3": "England",
+    "ans4": "Ingen",
     "correct": 2
+  },
+  "Hvilket land er det nyeste NATO medlem?": {
+    "ans1": "Sverige",
+    "ans2": "Afghanistan",
+    "ans3": "Israel",
+    "ans4": "Finland",
+    "correct": 4
+  },
+  "Hvilket land sendte den første hund i rummet?": {
+    "ans1": "Kina",
+    "ans2": "Storbritannien",
+    "ans3": "Sovjetunionen",
+    "ans4": "USA",
+    "correct": 3
+  },
+  "Hvad kaldes en duel mellem 3 mennesker?": {
+    "ans1": "Duel",
+    "ans2": "Dyst",
+    "ans3": "Truel",
+    "ans4": "Duet",
+    "correct": 3
+  },
+  "Hvilken sodavand var den første i rummet?": {
+    "ans1": "Sprite",
+    "ans2": "Faxi kondi",
+    "ans3": "Fanta",
+    "ans4": "Cola",
+    "correct": 4
+  },
+  "Hvad er Chicago": {
+    "ans1": "En stat",
+    "ans2": "En storby",
+    "ans3": "En landsby",
+    "ans4": "En hovedstad",
+    "correct": 2
+  },
+  "Hvad betyder “Hakuna Matata”?": {
+    "ans1": "Skill issue",
+    "ans2": "Prøv igen",
+    "ans3": "Ingen bekymringer",
+    "ans4": "Slap af",
+    "correct": 3
+  },
+  "Hvad er den mest sete YouTube video nogensinde?": {
+    "ans1": "Baby Shark",
+    "ans2": "Despacito",
+    "ans3": "Gangnam Style",
+    "ans4": "Shape of you",
+    "correct": 1
+  },
+  "Hvad er hovedingrediensen i hummus?": {
+    "ans1": "Kikærter",
+    "ans2": "Avocado",
+    "ans3": "Ris",
+    "ans4": "Majs",
+    "correct": 1
+  },
+  "Hvad er hovedstaden af Japan?": {
+    "ans1": "Seoul",
+    "ans2": "Beijing",
+    "ans3": "Tokyo",
+    "ans4": "Bangkok",
+    "correct": 3
+  },
+  "Hvor mange minutter er der på 3.5 timer?": {
+    "ans1": "195",
+    "ans2": "210",
+    "ans3": "180",
+    "ans4": "200",
+    "correct": 2
+  },
+  "Hvor mange 0'er er der i ti tusind?": {
+    "ans1": "3",
+    "ans2": "7",
+    "ans3": "5",
+    "ans4": "4",
+    "correct": 4
+  },
+  "Hvad er det største nulevende dyr i verden?": {
+    "ans1": "Hvalhaj",
+    "ans2": "Blåhval",
+    "ans3": "Spækhugger",
+    "ans4": "Afrikansk elefant",
+    "correct": 2
+  },
+  "Hvilket land er Nutella originalt fra?": {
+    "ans1": "Tyskland",
+    "ans2": "Schweiz",
+    "ans3": "Østrig",
+    "ans4": "Italien",
+    "correct": 4
+  },
+  "Hvor mange pyramider er der i Giza i Egypten?": {
+    "ans1": "9",
+    "ans2": "8",
+    "ans3": "7",
+    "ans4": "10",
+    "correct": 1
+  },
+  "I hvilket år fik Aarhus sit navn med dobbelt a?": {
+    "ans1": "2009",
+    "ans2": "1999",
+    "ans3": "2000",
+    "ans4": "2011",
+    "correct": 4
+  },
+  "Hvad er det største organ i menneskets krop?": {
+    "ans1": "Hjertet",
+    "ans2": "Hjernen",
+    "ans3": "Nyren",
+    "ans4": "Huden",
+    "correct": 4
   }
 }

@@ -98,6 +98,7 @@
   "dependencies": {
     "@react-three/drei": "^9.97.0",
     "@react-three/fiber": "^8.15.16",
+    "@react-three/postprocessing": "^2.15.13",
     "camera-controls": "^2.7.4",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.8",

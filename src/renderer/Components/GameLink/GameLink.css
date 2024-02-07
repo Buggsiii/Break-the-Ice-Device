@@ -1,19 +1,13 @@
-.gamelink-con {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-  background: var(--background);
-}
-
 .gamelink {
   position: relative;
-  width: 100%;
   font-weight: bold;
+  width: 100%;
   padding: 12px 16px;
   font-size: 1.3rem;
+  background: #00000064;
+  border: solid 4px;
+  border-radius: 24px;
+  text-align: center;
   transition: filter 0.2s ease-in-out;
 }
 
@@ -22,50 +16,28 @@
   text-decoration: none;
 }
 
-.gamelink:first-child {
-  counter-reset: index;
-}
-
 .gamelink:nth-child(odd) {
-  transform: translateX(-24px);
   animation: fromLeft 1s ease-in-out;
 }
 
 .gamelink:nth-child(even) {
-  transform: translateX(24px);
   animation: fromRight 1s ease-in-out;
-}
-
-.gamelink::before {
-  position: absolute;
-  left: -24px;
-  top: 0;
-  right: -24px;
-  bottom: 0;
-  display: block;
-  padding: 12px 16px;
-  font-size: 1.3rem;
-  background: var(--gradient);
-  border-radius: 4px;
-  content: counter(index) '.';
-  counter-increment: index;
-  z-index: -1;
 }
 
 @keyframes fromLeft {
   from {
-    transform: translateX(calc(-50vw - 50% - 24px));
+    transform: translateX(calc(-50vw - 50%));
   }
   to {
-    transform: translateX(-24px);
+    transform: translateX(0);
   }
 }
 
 @keyframes fromRight {
   from {
-    transform: translateX(calc(50vw + 50% + 24px));
+    transform: translateX(calc(50vw + 50%));
   }
   to {
-    transform: translateX(24px);
+    transform: translateX(0);
   }
 }
