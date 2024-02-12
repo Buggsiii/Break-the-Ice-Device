@@ -10,16 +10,16 @@ class Input {
   emitInput(key) {
     switch (key) {
       case '1':
-        this.InputEvent.emit('one');
+        this.InputEvent.emit('one', 0);
         break;
       case '2':
-        this.InputEvent.emit('two');
+        this.InputEvent.emit('two', 1);
         break;
       case '3':
-        this.InputEvent.emit('three');
+        this.InputEvent.emit('three', 2);
         break;
       case '4':
-        this.InputEvent.emit('four');
+        this.InputEvent.emit('four', 3);
         break;
       case 'Escape':
         this.InputEvent.emit('back');
@@ -43,18 +43,31 @@ class Input {
           break;
         default:
           this.emitInput(key);
+          this.InputEvent.emit('any');
           break;
       }
     });
 
-    window.electron.ipcRenderer.sendMessage('one', 'ready');
+    window.electron.ipcRenderer.sendMessage(this.name, 'ready');
 
     // Check for keyboard input
     let lastKey;
     document.addEventListener('keydown', (event) => {
-      if (event.key == lastKey) return;
+      if (
+        event.key !== '1' &&
+        event.key !== '2' &&
+        event.key !== '3' &&
+        event.key !== '4' &&
+        event.key !== 'Escape'
+      )
+        return;
+
+      if (event.key === lastKey) return;
       lastKey = event.key;
+
       this.emitInput(event.key);
+      if (event.key === 'Escape') return;
+      this.InputEvent.emit('any', parseInt(event.key));
     });
     document.addEventListener('keyup', () => (lastKey = null));
   }

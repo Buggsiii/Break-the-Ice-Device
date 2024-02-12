@@ -1,10 +1,21 @@
 .correct-answers {
   position: absolute;
   top: 72px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 24px;
+  right: 24px;
   text-shadow: 0 0 8px #000;
   font-size: 24px;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.correct-answers > :first-child {
+  color: red;
+}
+
+.correct-answers > :last-child {
+  color: blue;
 }
 
 .question {
