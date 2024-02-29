@@ -121,12 +121,12 @@ function Title() {
   );
 }
 
-function Win() {
+function GameOver() {
   return (
     <>
       <Center position={[0, 0.2, -105]}>
         <Text3D font={'./fonts/Roboto Black_Regular.json'} bevelEnabled>
-          YOU WON!
+          GAMEOVER
         </Text3D>
       </Center>
       <Center position={[0, -0.7, -105]}>
@@ -136,10 +136,9 @@ function Win() {
           bevelEnabled
           bevelThickness={0.1}
         >
-          PRESS 1
+          PRESS ALL TO EXIT
         </Text3D>
       </Center>
-      <BlinkingLight zPos={6} />
     </>
   );
 }
@@ -175,7 +174,10 @@ export default function Trivia() {
     setCanAnswer(false);
 
     if (isCorrect) return;
-    setLives((last: number) => last - 1);
+    setLives((last: number) => {
+      if (last === 1) setZPos(-100);
+      return last - 1;
+    });
   }
 
   function updateCanAnswer() {
@@ -184,6 +186,7 @@ export default function Trivia() {
     if (currentZPos > 1) return;
     if (currentZPos - zPos < 1) {
       if (canAnswer) return;
+      if (zPos <= -100) return;
       setCanAnswer(true);
       setQuestion(getRandomKey);
     } else if (canAnswer) setCanAnswer(false);
@@ -243,8 +246,8 @@ export default function Trivia() {
         <Hall />
         <Controls pos={new THREE.Vector3(0, 0, zPos)} />
         <Title />
-        <Win />
-        <Stats />
+        <GameOver />
+        {/* <Stats /> */}
       </Canvas>
       <div className="correct-answers">
         {[...Array(lives > 0 ? lives : 0)].map((_, i) => (

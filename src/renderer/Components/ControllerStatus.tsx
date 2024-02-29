@@ -1,8 +1,6 @@
 export default function ControllerStatus({
-  index,
   connected = false,
 }: {
-  index: number;
   connected?: boolean;
 }) {
   return (
@@ -15,7 +13,7 @@ export default function ControllerStatus({
       }}
     >
       <div className={`indicator ${connected && 'active'}`} />
-      <p>Controller {index}</p>
+      <p>Controller</p>
     </div>
   );
 }

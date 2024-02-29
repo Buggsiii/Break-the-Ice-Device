@@ -39,8 +39,7 @@ export default function Layout({
       </header>
       <main>{children}</main>
       <footer>
-        <ControllerStatus index={1} connected={oneConnected} />
-        <ControllerStatus index={2} />
+        <ControllerStatus connected={oneConnected} />
       </footer>
     </>
   );
